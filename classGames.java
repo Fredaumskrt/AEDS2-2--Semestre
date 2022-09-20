@@ -1,14 +1,19 @@
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 // import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.io.IOException;
 
+/*
+ * TP nao foi feito todo por mim, tive ajuda de um colega e tambem utilizei alguns metodos feitos por ele
+ */
 class games {
     private int app_id;
     private String name;
-    private SimpleDateFormat dateOfYear = new SimpleDateFormat("dd/mm/yyyy");
+    private Date dateOfYear;
     private String owners;
     private int age;
     private float price;
@@ -21,24 +26,25 @@ class games {
     private float upvotes;
     private int avg_pt;
     private String developers;
-    private ArrayList<String> genres;
+    private ArrayList<String> genres; 
 
     public games() {
         app_id = 0;
         name = "";
+        dateOfYear = dateOfYear;
         owners = "";
         age = 0;
         price = 0;
         dlcs = 0;
-        languages = new ArrayList<String>();
+        languages = new ArrayList<String>();;
         website = "";
         windows = false;
         mac = false;
         linux = false;
-        upvotes = 0;
+        upvotes = 0.0f;
         avg_pt = 0;
         developers = "";
-        genres = new ArrayList<String>();
+        genres = new ArrayList<String>();;
 
     }
 
@@ -47,7 +53,7 @@ class games {
             int avg_pt, String developers, ArrayList<String> genres) {
         this.app_id = app_id;
         this.name = name;
-        this.dateOfYear = dateOfYear;
+        this.dateOfYear = new Date();
         this.owners = owners;
         this.price = price;
         this.dlcs = dlcs;
@@ -59,6 +65,7 @@ class games {
         this.upvotes = upvotes;
         this.avg_pt = avg_pt;
         this.developers = developers;
+        this.genres = genres;
     }
 
     public int getapp_id() {
@@ -77,13 +84,13 @@ class games {
         return name;
     }
 
-    // public Date getdateOfYear(){
-    // return this.dateOfYear;
-    // }
+    public Date getdateOfYear() {
+    return this.dateOfYear;
+    }
 
-    // public Date setdateOfYear(){
-    // return this.dateOfYear;
-    // }
+    public Date setdateOfYear() {
+    return this.dateOfYear;
+    }
 
     public String getowners() {
         return owners;
@@ -192,7 +199,7 @@ class games {
     // public void readEverything(String games) throws Exception {
     // this.readapp_id(games); // do it for all other atributes !!!!!!!!!!!!
     // }
-
+    
     public String removeMarks(String newWords) { // method to remove quotes
         String delete = "";
         for (int i = 0; i < newWords.length(); i++) { // remove where contains quotes on atributes
@@ -207,25 +214,55 @@ class games {
         return delete;
     }
 
-    public void print() { // show in screen
+    private String timeOfstring(int time) {
+        if (time == 0)
+            return null;
 
-        System.out.println(getapp_id() + " " + getname() + " " + getowners() + " " + getage() + " " + getprice() + " "
-                + getdlcs() + "[" + getlanguages() + "]" + getwebsite() + " " + getwindows() + " " + getmac() + " "
-                + getlinux() + " " + getupvotes() + " " + getavg_pt() + " " + getdevelopers() + "[" + getgenres()
-                + "]");
+        int hour = time / 60;
+        int minute = time - hour * 60;
+        String testTime = "";
+        if (hour != 0 && minute != 0)
+            testTime = Integer.toString(hour) + "h " + Integer.toString(minute) + 'm';
+
+        else if (hour != 0)
+            testTime = Integer.toString(hour) + 'h';
+        else if (minute != 0)
+            testTime += Integer.toString(minute) + 'm';
+        else
+            testTime = null;
+        return testTime;
     }
 
-    // ler a string caractere a caractere com dois contadores
-    
+    public void print() { // show in screen
+         String[] array = new String[5];
+        
+        String datetoString = "null";
+        if (!this.dateOfYear.equals(new Date())) {
+            array = this.dateOfYear.toString().split(" ");
+            datetoString = array[1] + '/' + array[array.length - 1];
+        }
+        
+        String price = Float.toString(this.price);
+        if (price.charAt(price.length() - 2) == '.' && price.charAt(price.length() - 1) == '0')
+            price += '0';
+        String website = this.website.length() == 0 ? null : this.website;
+        String upvotes = Integer.toString((int) (this.upvotes)) + '%';
+        String avg_pt = this.timeOfstring(this.avg_pt);
+
+        System.out.println(this.app_id + " " + this.name + " " + datetoString +  " " + this.owners + " " + this.age + " " + price + " "
+                + this.dlcs + " " + this.languages + " " + website + " " + this.windows + " " + this.mac + " "
+                + this.linux + " " + upvotes + " " + avg_pt + " " + this.developers + " " + this.genres);
+    }
+//ERRO PRIVATE
     public void readapp_id(String games) throws Exception {
-        String folderOfGames = "tmp/games.csv";
+        String folderOfGames = "/tmp/games.csv";
 
         FileReader arq = new FileReader(folderOfGames);
         BufferedReader br = new BufferedReader(arq);
 
-        String[] firstLine = new String[20]; 
-        int assistant; 
-        int assistant02; 
+        String[] firstLine = new String[20];
+        int assistant;
+        int assistant02;
 
         assistant = assistant02 = 0;
 
@@ -241,34 +278,95 @@ class games {
                 firstLine[assistant02] = games.substring(assistant, i);
                 assistant = i + 1;
                 assistant02++;
+            } 
+            // pega os genres que não estão delimitados por aspas
+            else if ((!(games.charAt(i) == '"')) && (assistant02 == 16)) {
+                firstLine[assistant02] = games.substring((games.lastIndexOf(",") + 1), games.length());
+                assistant = i + 1;
             }
         }
         this.app_id = Integer.parseInt(firstLine[0]);
-        br.close();
-    }
+        this.name = firstLine[1];
 
-  
+        // date doesnt contain day
+        try {
+         this.dateOfYear = new SimpleDateFormat("MMM dd, yyyy",
+        Locale.ENGLISH).parse(firstLine[2]);
+        } catch(ParseException e){
+           // this.dateOfYear = new SimpleDateFormat("MMM/yyyy",Locale.ENGLISH).parse(firstLine[2]);
+           this.dateOfYear = new Date();
+        }
+        this.owners = firstLine[3];
+        this.age = Integer.parseInt(firstLine[4]);
+        this.price = Float.parseFloat(firstLine[5]);
+        this.dlcs = Integer.parseInt(firstLine[6]);
+        this.languages.add(firstLine[7].replace("[", "").replace("]", "").replace("'", ""));
+        this.website = firstLine[8];
+        this.windows = Boolean.parseBoolean(firstLine[9]);
+        this.mac = Boolean.parseBoolean(firstLine[10]);
+        this.linux = Boolean.parseBoolean(firstLine[11]);
+        this.upvotes = Float.parseFloat(firstLine[12])
+                / (Float.parseFloat(firstLine[12]) + Float.parseFloat(firstLine[13]));
+        this.upvotes = (int) (Math.round(this.upvotes * 100));
+        this.avg_pt = Integer.parseInt(firstLine[14]);
+        this.developers = firstLine[15];
+        
+        try {
+            this.genres.add(firstLine[16].replace(",", ", "));
+        } catch (NullPointerException e) {
+            this.genres.add(firstLine[16]);
+        }
+
+        }
+
 }
 
-public class classGames {
+class classGames {
     public static void main(String[] args) throws Exception {
-        String[] begin = new String[1000]; // entrada
-        int count = 0; // numEntrada
+        MyIO.setCharset("UTF-8");
+
+        String[] begin = new String[1000];
+        int count = 0;
 
         do {
             begin[count] = MyIO.readLine();
         } while (isFim(begin[count++]) == false);
         count--;
-        games games[] = new games[count];
+        
+
+        if (count == 0)
+            return;
+        
+        
+        ArrayList<String> openFile = readEverything("/tmp/games.csv");
 
         for (int i = 0; i < count; i++) {
-            games[i].readapp_id(begin[i]);
+            for (String line : openFile) {
+                if (begin[i].equals(line.split(",")[0])) {
+                    games gameT = new games();
+                    gameT.readapp_id(line);
+                    gameT.print();
+                    break;
+                }
+            }
+        }
+    }
+
+    public static ArrayList<String> readEverything(String gamesFile) {
+        ArrayList<String> lines = new ArrayList<String>();
+        try {
+            FileReader arq = new FileReader(gamesFile);
+            BufferedReader br = new BufferedReader(arq);
+
+            for (String line = br.readLine(); line != null; line = br.readLine()) {
+                lines.add(line);
+            }
+
+            br.close();
+        } catch (IOException ioe) {
         }
 
-        for (int i = 0; i < count; i++) {
-            games[i].print();
-
-        }
+        return lines;
     }
 
     public static boolean isFim(String s) {
