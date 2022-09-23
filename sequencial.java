@@ -7,8 +7,13 @@ import java.util.ArrayList;
 import java.io.IOException;
 
 /*
- * TP nao foi feito todo por mim, tive ajuda de um colega e tambem utilizei alguns metodos feitos por ele
- */
+Author: Frederico Malaquias A. Caldeira
+Matricula: 747544
+
+/////////*
+* Programa feito com a ajuda de um amigo e tambem estudante de ciencia da computacao
+
+*/
 class Lista {
     private classGames[] array;
     private int n;
@@ -50,10 +55,10 @@ class Lista {
 
     public boolean pesqSequencial(String x) {
         boolean resp = false;
-        //int n = x.length;
+        // int n = x.length;
 
         for (int i = 0; i < n; i++) {
-
+            
             if (array[i].getname().equals(x)) {
                 resp = true;
                 i = n;
@@ -121,7 +126,8 @@ class classGames {
 
     }
 
-    public classGames(int app_id, String name, SimpleDateFormat dateOfYear, String owners, int age, float price, int dlcs,
+    public classGames(int app_id, String name, SimpleDateFormat dateOfYear, String owners, int age, float price,
+            int dlcs,
             ArrayList<String> languages, String website, boolean windows, boolean mac, boolean linux, float upvotes,
             int avg_pt, String developers, ArrayList<String> genres) {
         this.app_id = app_id;
@@ -160,8 +166,8 @@ class classGames {
         return name;
     }
 
-    public String setname() {
-        return name;
+    public void setname(String name) {
+        this.name = name;
     }
 
     public Date getdateOfYear() {
@@ -276,10 +282,7 @@ class classGames {
         return genres;
     }
 
-    // public void readEverything(String games) throws Exception {
-    // this.readapp_id(games); // do it for all other atributes !!!!!!!!!!!!
-    // }
-
+   
     public String removeMarks(String newWords) { // method to remove quotes
         String delete = "";
         for (int i = 0; i < newWords.length(); i++) { // remove where contains quotes on atributes
@@ -335,13 +338,13 @@ class classGames {
                 + this.linux + " " + upvotes + " " + avg_pt + " " + this.developers + " " + this.genres);
     }
 
-    // ERRO PRIVATE
+    
     public void readapp_id(String games) throws Exception {
-        String folderOfGames = "tmp/games.csv";
+        String folderOfGames = "/tmp/games.csv";
 
         FileReader arq = new FileReader(folderOfGames);
         BufferedReader br = new BufferedReader(arq);
-
+        
         String[] firstLine = new String[20];
         int assistant;
         int assistant02;
@@ -417,38 +420,45 @@ class sequencial {
     public static void main(String[] args) throws Exception {
         MyIO.setCharset("UTF-8");
 
-        classGames gameT = new classGames();
         String[] begin = new String[1000];
         int count = 0;
-        
-        classGames test = new classGames();
-        do {
-            begin[count] = MyIO.readLine();
-            test.inserirFim(begin[count]);
-            
-        } while (isFim(begin[count++]) == false);
-        count--;
 
-        test.readapp_id(begin[count]);
+        Lista test = new Lista(100);
+        classGames gamesT = new classGames();
+
+        while (true) {
+            begin[count] = MyIO.readLine();
+            if (begin[count].equals("FIM")) {
+                break;
+            }
+            String gamesContent = findGameByID("/tmp/games.csv", begin[count]);
+            gamesT.readapp_id(gamesContent); 
+            // System.out.println(gamesT.getname());
+            
+            test.inserirFim(gamesT.clone());
+            count++;
+        }
 
         if (count == 0)
             return;
 
-        ArrayList<String> openFile = readEverything("tmp/games.csv");
+        // After the end, comes the next Entry
+        // substring na linha 
+        // retorna linha do 
+                String nextEntry;
 
-        for (int i = 0; i < count; i++) {
-            for (String line : openFile) {
-                if (begin[i].equals("FIM")) {
-                    gameT.readapp_id(line);
-                    MyIO.println(test.pesqSequencial(line) ? "SIM" : "NAO");
-                    
-                    break;
-                }
+        while (true) {
+
+            nextEntry = MyIO.readLine();
+            if (nextEntry.equals("FIM")) {
+                break;
             }
+            MyIO.println(test.pesqSequencial(nextEntry) ? "SIM" : "NAO");
         }
+
+        
     }
 
-  
     public static ArrayList<String> readEverything(String gamesFile) {
         ArrayList<String> lines = new ArrayList<String>();
         try {
@@ -464,6 +474,26 @@ class sequencial {
         }
 
         return lines;
+    }
+    public static String findGameByID(String gamesFile, String appID) {
+        
+        try {
+            FileReader arq = new FileReader(gamesFile);
+            BufferedReader br = new BufferedReader(arq);
+
+            for (String line = br.readLine(); line != null; line = br.readLine()) {
+                String actualID = line.substring(0, line.indexOf(",")); // lendo primeiro elemento antes da virgula
+                if(appID.equals(actualID)){
+                    return line;
+                }
+            }
+
+            br.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+
+        return "";
     }
 
     public static boolean isFim(String s) {
