@@ -433,7 +433,7 @@ class sequencial {
             }
             String gamesContent = findGameByID("/tmp/games.csv", begin[count]);
             gamesT.readapp_id(gamesContent); 
-            // System.out.println(gamesT.getname());
+            
             
             test.inserirFim(gamesT.clone());
             count++;
@@ -441,11 +441,8 @@ class sequencial {
 
         if (count == 0)
             return;
-
-        // After the end, comes the next Entry
-        // substring na linha 
-        // retorna linha do 
-                String nextEntry;
+        // new entry after app_id
+            String nextEntry;
 
         while (true) {
 
