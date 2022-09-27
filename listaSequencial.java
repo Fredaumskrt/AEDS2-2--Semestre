@@ -485,26 +485,38 @@ class listaSequencial {
             int posIR = 0;
 
             if(receiv.compareTo("I*") == 0 ){
-                posIR = Integer.parseInt(begin[count].substring(0, begin[count].indexOf(","));
+                posIR = Integer.findGameByID("/tmp/games.csv", begin[count]);
                 reservation = begin[count].substring();
-            } else if(receiv,compareTo("R*") == 0){
+            } else if(receiv.compareTo("R*") == 0){
                 posIR = Integer.parseInt(begin[count].substring(5));
             }
-            if(receiv.compareTo("I*" == 0)){
+            if(receiv.compareTo("I*") == 0){
                 classGames aux = new classGames();
 
                 aux.readapp_id(reservation);
                 gamesT.inserir(aux, posIR);
-            } else if(receiv.compareTo("II*" == 0)){
+            } else if(receiv.compareTo("II*") == 0){
 
                 aux.readapp_id(reservation);
                 gamesT.inserirInicio(aux);
-            } else if(receiv.compareTo("IF" == 0)){
+            } else if(receiv.compareTo("IF") == 0){
                 classGames aux = new classGames();
 
+                aux.readapp_id(reservation);
+                gamesT.inserirFim(aux);
+            } else if(receiv.compareTo("R*") == 0){
+                System.out.println("(R)" + " " + gamesT.remover(posIR).getname());
+
+            }else if(receiv.compareTo("RI") == 0){
+
+                System.out.println("(R)" + " " + gamesT.removerInicio().getname());
+            } else if(receiv.compareTo("RF") == 0){
+
+                System.out.println("(R)" + " " + gamesT.removerFim().getname());
             }
 
         }
+        gamesT.mostrar();
 
     }
 
