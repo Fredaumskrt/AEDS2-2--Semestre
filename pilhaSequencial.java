@@ -54,9 +54,6 @@ class Pilha {
         }
     }
 
-    public Pilha replace(String string, String string2) {
-        return null;
-    }
 }
 
 class classGames {
@@ -67,7 +64,7 @@ class classGames {
     private int age;
     private float price;
     private int dlcs;
-    static ArrayList<String> languages;
+    private ArrayList<String> languages;
     private String website;
     private boolean windows;
     private boolean mac;
@@ -128,20 +125,8 @@ class classGames {
         clone.price = this.price;
         clone.dlcs = this.dlcs;
 
-        // clone.languages = new ArrayList<>();
-        // clone.languages = this.languages;
-
         clone.languages = new ArrayList<String>();
         clone.languages.addAll(languages);
-        
-
-        //clone.languages = new ArrayList<>();
-        // clone.languages.addAll(languages);
-
-        // for (String s : this.languages) {
-        // clone.languages.add(s);
-        // }
-        // clone.languages.addAll(this.languages);
 
         clone.website = this.website;
         clone.windows = this.windows;
@@ -153,9 +138,6 @@ class classGames {
 
         clone.genres = new ArrayList<String>();
         clone.genres.addAll(genres);
-        // for (String s : this.genres) {
-        // clone.genres.add(s);
-        // }
 
         return clone;
     }
@@ -339,7 +321,7 @@ class classGames {
 
         System.out.println(this.app_id + " " + this.name + " " + datetoString + " " + this.owners + " " + this.age + " "
                 + price + " "
-                + this.dlcs + " " + languages + " " + website + " " + this.windows + " " + this.mac + " "
+                + this.dlcs + " " + this.languages + " " + website + " " + this.windows + " " + this.mac + " "
                 + this.linux + " " + upvotes + " " + avg_pt + " " + this.developers + " " + this.genres);
     }
 
@@ -350,7 +332,6 @@ class classGames {
 
         FileReader arq = new FileReader(folderOfGames);
         BufferedReader br = new BufferedReader(arq);
-        
 
         String[] firstLine = new String[20];
         int assistant;
@@ -395,14 +376,14 @@ class classGames {
         this.price = Float.parseFloat(firstLine[5]);
         this.dlcs = Integer.parseInt(firstLine[6]);
 
-        try {
-            this.languages.add(firstLine[7].replace("[", "").replace("]", "").replace("'", ""));
-            
-        } catch (Exception e) {
-            //TODO: handle exception
-        }
+        this.languages.add(firstLine[7].replace("[", "").replace("]", "").replace("'", ""));
 
-        
+        for (int j = 0; j < games.length(); j++) {
+            if (languages.contains("[")) {
+                this.languages.add(firstLine[7].replace("'", ""));
+            } else if (languages.contains("]"))
+                ;
+        }
         this.website = firstLine[8];
         this.windows = Boolean.parseBoolean(firstLine[9]);
         this.mac = Boolean.parseBoolean(firstLine[10]);
@@ -414,20 +395,12 @@ class classGames {
         this.developers = firstLine[15];
 
         try {
-        this.genres.add(firstLine[16].replace(",", ", "));
+            this.genres.add(firstLine[16].replace(",", ", "));
         } catch (NullPointerException e) {
-        this.genres.add(firstLine[16]);
+            this.genres.add(firstLine[16]);
         }
 
     }
-
-    public boolean pesqSequencial(String line) {
-        return false;
-    }
-
-    public void inserirFim(String string) {
-    }
-
 }
 
 class pilhaSequencial {
