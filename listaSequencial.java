@@ -496,9 +496,8 @@ class listaSequencial {
         String[] begin = new String[1000]; // entrada
         int count = 0; // contador
 
-        Fila test = new Fila(100);
         classGames gamesT = new classGames();
-
+        
         while (true) {
             begin[count] = MyIO.readLine();
             if (begin[count].equals("FIM")) {
@@ -506,15 +505,15 @@ class listaSequencial {
             }
             String gamesContent = findGameByID("tmp/games.csv", begin[count]);
             gamesT.readapp_id(gamesContent); // busca os atributos
+            
+            Lista test = new Lista(100);
             test.inserir(gamesT.clone());
             count++;
-
         }
 
         if (count == 0)
             return;
 
-        
         int nextEntry;
         nextEntry = MyIO.readInt();
 
@@ -536,28 +535,40 @@ class listaSequencial {
                 reservation = begin[count].substring(3);
             }
             if (action.compareTo("I*") == 0) {
-                classGames film = new classGames();
-                
+
                 String gamesContent = findGameByID("tmp/games.csv", reservation);
                 gamesT.readapp_id(gamesContent);
-                test.inserir(gamesT);   
-                // test.inserir(posIR);   
+
+                test.inserirInicio(gamesT.clone());
+
             }
-            if(action.compareTo("II") == 0){
+            if (action.compareTo("II") == 0) {
+
                 String gamesContent = findGameByID("tmp/games.csv", reservation);
                 gamesT.readapp_id(gamesContent);
-                classGames film = new classGames();
+                test.inserirFim(gamesT);
 
-                film.inserirInicio(reservation);
-            } else if()
+            } else if (action.compareTo("IF") == 0) {
+                classGames testeNovo = new classGames();
 
+                String gamesContent = findGameByID("tmp/games.csv", reservation);
+                gamesT.readapp_id(gamesContent);
+                // test.inserirFim(gamesT);
 
+            } else if (action.compareTo("R*") == 0) {
+                MyIO.println("(R)" + " " + test.remover(posIR).getname());
+            } else if (action.compareTo("RI") == 0) {
+
+                MyIO.println("(R)" + " " + test.removerInicio().getname());
+            } else if (action.compareTo("RF") == 0) {
+
+                MyIO.println("(R)" + " " + test.removerFim().getname());
+            }
         }
         test.mostrar();
 
     }
 
-    
     public static String findGameByID(String gamesFile, String appID) {
 
         try {
