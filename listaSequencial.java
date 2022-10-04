@@ -7,20 +7,18 @@ import java.util.ArrayList;
 import java.io.IOException;
 
 /*
+//////////////////////////////////////////////////
+
 Author: Frederico Malaquias A. Caldeira
 Matricula: 747544
 
-/////////*
-* Programa feito com a ajuda de um amigo e tambem estudante de ciencia da computacao
-
+/////////////////////////////////////////////////
 */
+
 class Lista {
     private classGames[] array;
     private int n;
 
-    /**
-     * Construtor da classe.
-     */
     public Lista(int tamanho) {
         array = new classGames[tamanho];
         n = 0;
@@ -44,12 +42,10 @@ class Lista {
 
     public void inserirFim(classGames x) throws Exception {
 
-        // validar insercao
         if (n >= array.length) {
             throw new Exception("Erro ao inserir!");
         }
-
-        array[n] = x;
+        array[n] = x.clone();
         n++;
     }
 
@@ -85,6 +81,7 @@ class Lista {
 
         return resp;
     }
+
     public classGames removerFim() throws Exception {
 
         if (n == 0) {
@@ -130,7 +127,7 @@ class classGames {
     private int age;
     private float price;
     private int dlcs;
-    private ArrayList<String> languages;
+    static ArrayList<String> languages;
     private String website;
     private boolean windows;
     private boolean mac;
@@ -149,7 +146,6 @@ class classGames {
         price = 0;
         dlcs = 0;
         languages = new ArrayList<String>();
-        ;
         website = "";
         windows = false;
         mac = false;
@@ -158,7 +154,6 @@ class classGames {
         avg_pt = 0;
         developers = "";
         genres = new ArrayList<String>();
-        ;
 
     }
 
@@ -185,7 +180,34 @@ class classGames {
 
     public classGames clone() {
         classGames clone = new classGames();
+
         clone.name = this.name;
+        clone.app_id = this.app_id;
+        clone.dateOfYear = this.dateOfYear;
+        clone.owners = this.owners;
+        clone.price = this.price;
+        clone.dlcs = this.dlcs;
+
+        // clone.languages = this.languages;
+        // clone.languages.addAll(languages);
+
+        // for (String s : this.languages) {
+        // clone.languages.add(s);
+        // }
+        // clone.languages.addAll(this.languages);
+
+        clone.website = this.website;
+        clone.windows = this.windows;
+        clone.mac = this.mac;
+        clone.linux = this.linux;
+        clone.upvotes = this.upvotes;
+        clone.avg_pt = this.avg_pt;
+        clone.developers = this.developers;
+
+        // clone.genres = new ArrayList<String>();
+        // for (String s : this.genres) {
+        // clone.genres.add(s);
+        // }
 
         return clone;
     }
@@ -374,7 +396,7 @@ class classGames {
     }
 
     public void readapp_id(String games) throws Exception {
-        String folderOfGames = "/tmp/games.csv";
+        String folderOfGames = "tmp/games.csv";
 
         FileReader arq = new FileReader(folderOfGames);
         BufferedReader br = new BufferedReader(arq);
@@ -404,6 +426,7 @@ class classGames {
                 assistant = i + 1;
             }
         }
+        // System.out.println(firstLine[0]);
         this.app_id = Integer.parseInt(firstLine[0]);
         this.name = firstLine[1];
 
@@ -412,14 +435,38 @@ class classGames {
             this.dateOfYear = new SimpleDateFormat("MMM dd, yyyy",
                     Locale.ENGLISH).parse(firstLine[2]);
         } catch (ParseException e) {
-
+            // this.dateOfYear = new
+            // SimpleDateFormat("MMM/yyyy",Locale.ENGLISH).parse(firstLine[2]);
             this.dateOfYear = new Date();
         }
         this.owners = firstLine[3];
         this.age = Integer.parseInt(firstLine[4]);
         this.price = Float.parseFloat(firstLine[5]);
         this.dlcs = Integer.parseInt(firstLine[6]);
-        this.languages.add(firstLine[7].replace("[", "").replace("]", "").replace("'", ""));
+
+        // try {
+        // this.languages.add(firstLine[7].replace("[", "").replace("]",
+        // "").replace("'", ""));
+
+        // } catch (Exception euu) {
+
+        // }
+
+        /////////////////////////////////////////////////////////////////////////
+
+        // try {
+        // for (int j = 0; j < games.length(); j++) {
+        // if (games.charAt(j) == '[') {
+        // this.languages.add(firstLine[7]);
+        // } else if (games.charAt(j) == ']') {
+        // break;
+        // }
+
+        // }
+        // } catch (Exception e) {
+
+        // }
+
         this.website = firstLine[8];
         this.windows = Boolean.parseBoolean(firstLine[9]);
         this.mac = Boolean.parseBoolean(firstLine[10]);
@@ -430,19 +477,12 @@ class classGames {
         this.avg_pt = Integer.parseInt(firstLine[14]);
         this.developers = firstLine[15];
 
-        try {
-            this.genres.add(firstLine[16].replace(",", ", "));
-        } catch (NullPointerException e) {
-            this.genres.add(firstLine[16]);
-        }
+        // try {
+        // this.genres.add(firstLine[16].replace(",", ", "));
+        // } catch (NullPointerException e) {
+        // this.genres.add(firstLine[16]);
+        // }
 
-    }
-
-    public boolean pesqSequencial(String line) {
-        return false;
-    }
-
-    public void inserirFim(String string) {
     }
 
 }
@@ -453,90 +493,71 @@ class listaSequencial {
     public static void main(String[] args) throws Exception {
         MyIO.setCharset("UTF-8");
 
-        String[] begin = new String[1000];
-        int count = 0;
+        String[] begin = new String[1000]; // entrada
+        int count = 0; // contador
 
-        Lista test = new Lista(100);
+        Fila test = new Fila(100);
         classGames gamesT = new classGames();
 
         while (true) {
             begin[count] = MyIO.readLine();
-
             if (begin[count].equals("FIM")) {
                 break;
             }
-            String gamesContent = findGameByID("/tmp/games.csv", begin[count]);
-            gamesT.readapp_id(gamesContent);
-
-            test.inserirFim(gamesT.clone());
+            String gamesContent = findGameByID("tmp/games.csv", begin[count]);
+            gamesT.readapp_id(gamesContent); // busca os atributos
+            test.inserir(gamesT.clone());
             count++;
+
         }
 
         if (count == 0)
             return;
-        // new entry after app_id
+
+        
         int nextEntry;
         nextEntry = MyIO.readInt();
 
-        for(int i = 0; i < nextEntry;i++){
+        for (int i = 0; i < nextEntry; i++) {
+
             begin[count] = MyIO.readLine();
-            String receiv = begin[count].substring(0, begin[count].indexOf(","));
-            String reservation = "";
+            String action = begin[count].substring(0, 1); // recebe
+            String reservation = ""; // reserva
             int posIR = 0;
 
-            if(receiv.compareTo("I*") == 0 ){
-                posIR = Integer.findGameByID("/tmp/games.csv", begin[count]);
-                reservation = begin[count].substring();
-            } else if(receiv.compareTo("R*") == 0){
-                posIR = Integer.parseInt(begin[count].substring(5));
+            if (action.compareTo("I*") == 0) {
+                posIR = Integer.parseInt(begin[count].substring(3, 4));
+                reservation = begin[count].substring(6);
             }
-            if(receiv.compareTo("I*") == 0){
-                classGames aux = new classGames();
 
-                aux.readapp_id(reservation);
-                gamesT.inserir(aux, posIR);
-            } else if(receiv.compareTo("II*") == 0){
-
-                aux.readapp_id(reservation);
-                gamesT.inserirInicio(aux);
-            } else if(receiv.compareTo("IF") == 0){
-                classGames aux = new classGames();
-
-                aux.readapp_id(reservation);
-                gamesT.inserirFim(aux);
-            } else if(receiv.compareTo("R*") == 0){
-                System.out.println("(R)" + " " + gamesT.remover(posIR).getname());
-
-            }else if(receiv.compareTo("RI") == 0){
-
-                System.out.println("(R)" + " " + gamesT.removerInicio().getname());
-            } else if(receiv.compareTo("RF") == 0){
-
-                System.out.println("(R)" + " " + gamesT.removerFim().getname());
+            else if (action.compareTo("R*") == 0) {
+                posIR = Integer.parseInt(begin[count].substring(3));
+            } else if (action.compareTo("II") == 0 || action.compareTo("IF") == 0) {
+                reservation = begin[count].substring(3);
             }
+            if (action.compareTo("I*") == 0) {
+                classGames film = new classGames();
+                
+                String gamesContent = findGameByID("tmp/games.csv", reservation);
+                gamesT.readapp_id(gamesContent);
+                test.inserir(gamesT);   
+                // test.inserir(posIR);   
+            }
+            if(action.compareTo("II") == 0){
+                String gamesContent = findGameByID("tmp/games.csv", reservation);
+                gamesT.readapp_id(gamesContent);
+                classGames film = new classGames();
+
+                film.inserirInicio(reservation);
+            } else if()
+
 
         }
-        gamesT.mostrar();
+        test.mostrar();
 
     }
 
-    public static ArrayList<String> readEverything(String gamesFile) {
-        ArrayList<String> lines = new ArrayList<String>();
-        try {
-            FileReader arq = new FileReader(gamesFile);
-            BufferedReader br = new BufferedReader(arq);
-
-            for (String line = br.readLine(); line != null; line = br.readLine()) {
-                lines.add(line);
-            }
-
-            br.close();
-        } catch (IOException ioe) {
-        }
-
-        return lines;
-    }
-
+    
     public static String findGameByID(String gamesFile, String appID) {
 
         try {
