@@ -15,7 +15,7 @@ Matricula: 747544
 /////////////////////////////////////////////////
 */
 class Pilha {
-    private classGames[] array;
+    public classGames[] array;
     public int n;
     public int count = 0;
 
@@ -42,7 +42,7 @@ class Pilha {
             throw new Exception("Erro ao remover!");
         }
 
-        return array[--n];
+        return array[--n].clone();
     }
 
     public void mostrar() {
@@ -52,6 +52,10 @@ class Pilha {
             MyIO.print("[" + i + "]" + " ");
             array[i].print();
         }
+    }
+
+    public Pilha replace(String string, String string2) {
+        return null;
     }
 }
 
@@ -63,7 +67,7 @@ class classGames {
     private int age;
     private float price;
     private int dlcs;
-    private ArrayList<String> languages;
+    static ArrayList<String> languages;
     private String website;
     private boolean windows;
     private boolean mac;
@@ -82,7 +86,6 @@ class classGames {
         price = 0;
         dlcs = 0;
         languages = new ArrayList<String>();
-        ;
         website = "";
         windows = false;
         mac = false;
@@ -91,7 +94,6 @@ class classGames {
         avg_pt = 0;
         developers = "";
         genres = new ArrayList<String>();
-        ;
 
     }
 
@@ -118,13 +120,29 @@ class classGames {
 
     public classGames clone() {
         classGames clone = new classGames();
+
         clone.name = this.name;
         clone.app_id = this.app_id;
         clone.dateOfYear = this.dateOfYear;
         clone.owners = this.owners;
         clone.price = this.price;
         clone.dlcs = this.dlcs;
-        clone.languages = this.languages;
+
+        // clone.languages = new ArrayList<>();
+        // clone.languages = this.languages;
+
+        clone.languages = new ArrayList<String>();
+        clone.languages.addAll(languages);
+        
+
+        //clone.languages = new ArrayList<>();
+        // clone.languages.addAll(languages);
+
+        // for (String s : this.languages) {
+        // clone.languages.add(s);
+        // }
+        // clone.languages.addAll(this.languages);
+
         clone.website = this.website;
         clone.windows = this.windows;
         clone.mac = this.mac;
@@ -132,7 +150,12 @@ class classGames {
         clone.upvotes = this.upvotes;
         clone.avg_pt = this.avg_pt;
         clone.developers = this.developers;
-        clone.genres = this.genres;
+
+        clone.genres = new ArrayList<String>();
+        clone.genres.addAll(genres);
+        // for (String s : this.genres) {
+        // clone.genres.add(s);
+        // }
 
         return clone;
     }
@@ -316,15 +339,18 @@ class classGames {
 
         System.out.println(this.app_id + " " + this.name + " " + datetoString + " " + this.owners + " " + this.age + " "
                 + price + " "
-                + this.dlcs + " " + this.languages + " " + website + " " + this.windows + " " + this.mac + " "
+                + this.dlcs + " " + languages + " " + website + " " + this.windows + " " + this.mac + " "
                 + this.linux + " " + upvotes + " " + avg_pt + " " + this.developers + " " + this.genres);
     }
 
     public void readapp_id(String games) throws Exception {
-        String folderOfGames = "tmp/games.csv";
+        String folderOfGames = "/tmp/games.csv";
+        this.languages.clear();
+        this.genres.clear();
 
         FileReader arq = new FileReader(folderOfGames);
         BufferedReader br = new BufferedReader(arq);
+        
 
         String[] firstLine = new String[20];
         int assistant;
@@ -351,6 +377,7 @@ class classGames {
                 assistant = i + 1;
             }
         }
+        // System.out.println(firstLine[0]);
         this.app_id = Integer.parseInt(firstLine[0]);
         this.name = firstLine[1];
 
@@ -367,7 +394,15 @@ class classGames {
         this.age = Integer.parseInt(firstLine[4]);
         this.price = Float.parseFloat(firstLine[5]);
         this.dlcs = Integer.parseInt(firstLine[6]);
-        this.languages.add(firstLine[7].replace("[", "").replace("]", "").replace("'", ""));
+
+        try {
+            this.languages.add(firstLine[7].replace("[", "").replace("]", "").replace("'", ""));
+            
+        } catch (Exception e) {
+            //TODO: handle exception
+        }
+
+        
         this.website = firstLine[8];
         this.windows = Boolean.parseBoolean(firstLine[9]);
         this.mac = Boolean.parseBoolean(firstLine[10]);
@@ -379,9 +414,9 @@ class classGames {
         this.developers = firstLine[15];
 
         try {
-            this.genres.add(firstLine[16].replace(",", ", "));
+        this.genres.add(firstLine[16].replace(",", ", "));
         } catch (NullPointerException e) {
-            this.genres.add(firstLine[16]);
+        this.genres.add(firstLine[16]);
         }
 
     }
@@ -401,8 +436,8 @@ class pilhaSequencial {
     public static void main(String[] args) throws Exception {
         MyIO.setCharset("UTF-8");
 
-        String[] begin = new String[1000];
-        int count = 0;
+        String[] begin = new String[1000]; // entrada
+        int count = 0; // contador
 
         Pilha test = new Pilha(100);
         classGames gamesT = new classGames();
@@ -412,20 +447,23 @@ class pilhaSequencial {
             if (begin[count].equals("FIM")) {
                 break;
             }
-            String gamesContent = findGameByID("tmp/games.csv", begin[count]);
-            gamesT.readapp_id(gamesContent);
+            String gamesContent = findGameByID("/tmp/games.csv", begin[count]);
+            gamesT.readapp_id(gamesContent); // busca os atributos
             test.inserir(gamesT.clone());
             count++;
 
         }
-            
 
         if (count == 0)
             return;
-        
-        int nextEntry;
 
-        nextEntry = MyIO.readInt(); // fazendo um for com valor de 25
+        // for (int i = 0; i < test.n; i++) {
+        // System.out.println(test.array[i].getname());
+
+        // }
+
+        int nextEntry;
+        nextEntry = MyIO.readInt();
 
         for (int i = 0; i < nextEntry; i++) {
 
@@ -434,44 +472,19 @@ class pilhaSequencial {
             String receiv = "";
 
             if (action.compareTo("I") == 0) {
-                receiv = begin[count].substring(3);
-                String gamesContent = findGameByID("tmp/games.csv", begin[count]);
-
-            } else if (action.compareTo("R") == 0) {
-
-            }
-
-            if (action.compareTo("I") == 0) {
+                receiv = begin[count].substring(2);
+                // System.out.println(receiv);
+                String gamesContent = findGameByID("/tmp/games.csv", receiv);
+                gamesT.readapp_id(gamesContent);
                 test.inserir(gamesT.clone());
             }
-              
-                
-            else if (action.compareTo("R") == 0) {
+
+            if (action.compareTo("R") == 0) {
                 MyIO.println("(R)" + " " + test.remover().getname());
             }
         }
         test.mostrar();
 
-
-
-    
-
-    }
-    public static ArrayList<String> readEverything(String gamesFile) {
-        ArrayList<String> lines = new ArrayList<String>();
-        try {
-            FileReader arq = new FileReader(gamesFile);
-            BufferedReader br = new BufferedReader(arq);
-
-            for (String line = br.readLine(); line != null; line = br.readLine()) {
-                lines.add(line);
-            }
-
-            br.close();
-        } catch (IOException ioe) {
-        }
-
-        return lines;
     }
 
     public static String findGameByID(String gamesFile, String appID) {
