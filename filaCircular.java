@@ -18,12 +18,18 @@ class Fila {
     private classGames[] array;
     private int primeiro;
     private int ultimo;
-     public int count;
+    public int count;
 
     public Fila(int tamanho) {
         array = new classGames[tamanho + 1];
         primeiro = ultimo = 0;
-         count = 0;
+        count = 0;
+    }
+
+    public void print() {
+        for (int i = 0; i < array.length; i++) {
+            System.out.println(array[i].getname());
+        }
     }
 
     public void inserir(classGames x) throws Exception {
@@ -35,7 +41,7 @@ class Fila {
 
         array[ultimo] = x;
         ultimo = (ultimo + 1) % array.length;
-         count++;
+        count++;
     }
 
     public classGames remover() throws Exception {
@@ -53,10 +59,10 @@ class Fila {
 
     public void mostrar() {
 
-         for (int i = primeiro; i != ultimo; i = ((i + 1) % array.length)) {
+        for (int i = primeiro; i != ultimo; i = ((i + 1) % array.length)) {
             System.out.print("[" + ((ultimo - primeiro) == 1 ? "0" : i) + "] ");
             // array[i].print();
-         }
+        }
 
     }
 
@@ -66,7 +72,7 @@ class Fila {
         int count = 0;
 
         for (int i = primeiro; i != ultimo; i = ((i + 1) % array.length)) {
-            // System.out.println(array[i].getName() + ": " + array[i].getDuration());
+            // System.out.println(array[i].getavg_pt());
             media += array[i].getavg_pt();
             count++;
         }
@@ -102,7 +108,6 @@ class classGames {
         price = 0;
         dlcs = 0;
         languages = new ArrayList<String>();
-        ;
         website = "";
         windows = false;
         mac = false;
@@ -111,7 +116,6 @@ class classGames {
         avg_pt = 0;
         developers = "";
         genres = new ArrayList<String>();
-        ;
 
     }
 
@@ -138,7 +142,27 @@ class classGames {
 
     public classGames clone() {
         classGames clone = new classGames();
+
         clone.name = this.name;
+        clone.app_id = this.app_id;
+        clone.dateOfYear = this.dateOfYear;
+        clone.owners = this.owners;
+        clone.price = this.price;
+        clone.dlcs = this.dlcs;
+
+        clone.languages = new ArrayList<String>();
+        clone.languages.addAll(languages);
+
+        clone.website = this.website;
+        clone.windows = this.windows;
+        clone.mac = this.mac;
+        clone.linux = this.linux;
+        clone.upvotes = this.upvotes;
+        clone.avg_pt = this.avg_pt;
+        clone.developers = this.developers;
+
+        clone.genres = new ArrayList<String>();
+        clone.genres.addAll(genres);
 
         return clone;
     }
@@ -318,7 +342,6 @@ class classGames {
             price += '0';
         String website = this.website.length() == 0 ? null : this.website;
         String upvotes = Integer.toString((int) (this.upvotes)) + '%';
-        // String avg_pt = Integer.parseInt(avg_pt);
         String avg_pt = this.timeOfstring(this.avg_pt);
 
         System.out.println(this.app_id + " " + this.name + " " + datetoString + " " + this.owners + " " + this.age + " "
@@ -329,6 +352,8 @@ class classGames {
 
     public void readapp_id(String games) throws Exception {
         String folderOfGames = "tmp/games.csv";
+        this.languages.clear();
+        this.genres.clear();
 
         FileReader arq = new FileReader(folderOfGames);
         BufferedReader br = new BufferedReader(arq);
@@ -358,6 +383,7 @@ class classGames {
                 assistant = i + 1;
             }
         }
+        // System.out.println(firstLine[0]);
         this.app_id = Integer.parseInt(firstLine[0]);
         this.name = firstLine[1];
 
@@ -366,14 +392,23 @@ class classGames {
             this.dateOfYear = new SimpleDateFormat("MMM dd, yyyy",
                     Locale.ENGLISH).parse(firstLine[2]);
         } catch (ParseException e) {
-
+            // this.dateOfYear = new
+            // SimpleDateFormat("MMM/yyyy",Locale.ENGLISH).parse(firstLine[2]);
             this.dateOfYear = new Date();
         }
         this.owners = firstLine[3];
         this.age = Integer.parseInt(firstLine[4]);
         this.price = Float.parseFloat(firstLine[5]);
         this.dlcs = Integer.parseInt(firstLine[6]);
+
         this.languages.add(firstLine[7].replace("[", "").replace("]", "").replace("'", ""));
+
+        for (int j = 0; j < games.length(); j++) {
+            if (languages.contains("[")) {
+                this.languages.add(firstLine[7].replace("'", ""));
+            } else if (languages.contains("]"))
+                ;
+        }
         this.website = firstLine[8];
         this.windows = Boolean.parseBoolean(firstLine[9]);
         this.mac = Boolean.parseBoolean(firstLine[10]);
@@ -391,7 +426,6 @@ class classGames {
         }
 
     }
-
 }
 
 class filaCircular {
@@ -402,39 +436,47 @@ class filaCircular {
         String[] begin = new String[1000];
         int count = 0;
 
-        Fila test = new Fila(100);
+        Fila test = new Fila(5);
         classGames gamesT = new classGames();
+        begin[count] = MyIO.readLine();
 
-        while (true) {
-            begin[count] = MyIO.readLine();
-            if (begin[count].equals("FIM")) {
-                break;
-            }
+        while (!begin[count].equals("FIM")) {
+            
             String gamesContent = findGameByID("tmp/games.csv", begin[count]);
             gamesT.readapp_id(gamesContent);
 
             test.inserir(gamesT);
             System.out.println(test.calculaMedia());
             count++;
+            begin[count] = MyIO.readLine();
         }
+        System.out.println("passei aqui");
 
-        if (count == 0)
-            return;
+        // if (count == 0)
+        // return;
         String receiv = "";
-        int nextEntry;
+        int nextEntry = 0;
+        
+        MyIO.readLine();
 
         nextEntry = MyIO.readInt();
+        System.out.println(nextEntry);
+
         for (int i = 0; i < nextEntry; i++) {
+            System.out.println("pASSEI");
 
             begin[count] = MyIO.readLine();
             String action = begin[count].substring(0);
 
-            if (action.compareTo("I") == 0) {
+            if (action.contains("I")) {
                 receiv = begin[count].substring(2);
                 String gamesContent = findGameByID("tmp/games.csv", receiv);
                 gamesT.readapp_id(gamesContent);
                 test.inserir(gamesT);
-            } else if (action.compareTo("R") == 0) {
+                test.print();
+                System.out.println(gamesT);
+
+            } else if (action.contains("R")) {
                 System.out.println("R");
                 System.out.println("(R)" + " " + test.remover().getname());
             }
@@ -444,22 +486,22 @@ class filaCircular {
 
     }
 
-    public static ArrayList<String> readEverything(String gamesFile) {
-        ArrayList<String> lines = new ArrayList<String>();
-        try {
-            FileReader arq = new FileReader(gamesFile);
-            BufferedReader br = new BufferedReader(arq);
+    // public static ArrayList<String> readEverything(String gamesFile) {
+    // ArrayList<String> lines = new ArrayList<String>();
+    // try {
+    // FileReader arq = new FileReader(gamesFile);
+    // BufferedReader br = new BufferedReader(arq);
 
-            for (String line = br.readLine(); line != null; line = br.readLine()) {
-                lines.add(line);
-            }
+    // for (String line = br.readLine(); line != null; line = br.readLine()) {
+    // lines.add(line);
+    // }
 
-            br.close();
-        } catch (IOException ioe) {
-        }
+    // br.close();
+    // } catch (IOException ioe) {
+    // }
 
-        return lines;
-    }
+    // return lines;
+    // }
 
     public static String findGameByID(String gamesFile, String appID) {
 
