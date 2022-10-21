@@ -54,8 +54,8 @@ class Pilha {
         }
     }
 
+   
 }
-
 class classGames {
     private int app_id;
     private String name;
@@ -64,7 +64,7 @@ class classGames {
     private int age;
     private float price;
     private int dlcs;
-    private ArrayList<String> languages;
+    static ArrayList<String> languages;
     private String website;
     private boolean windows;
     private boolean mac;
@@ -125,8 +125,13 @@ class classGames {
         clone.price = this.price;
         clone.dlcs = this.dlcs;
 
-        clone.languages = new ArrayList<String>();
-        clone.languages.addAll(languages);
+        // clone.languages = this.languages;
+        // clone.languages.addAll(languages);
+
+        // for (String s : this.languages) {
+        // clone.languages.add(s);
+        // }
+        // clone.languages.addAll(this.languages);
 
         clone.website = this.website;
         clone.windows = this.windows;
@@ -136,8 +141,10 @@ class classGames {
         clone.avg_pt = this.avg_pt;
         clone.developers = this.developers;
 
-        clone.genres = new ArrayList<String>();
-        clone.genres.addAll(genres);
+        // clone.genres = new ArrayList<String>();
+        // for (String s : this.genres) {
+        // clone.genres.add(s);
+        // }
 
         return clone;
     }
@@ -327,8 +334,6 @@ class classGames {
 
     public void readapp_id(String games) throws Exception {
         String folderOfGames = "/tmp/games.csv";
-        this.languages.clear();
-        this.genres.clear();
 
         FileReader arq = new FileReader(folderOfGames);
         BufferedReader br = new BufferedReader(arq);
@@ -376,14 +381,29 @@ class classGames {
         this.price = Float.parseFloat(firstLine[5]);
         this.dlcs = Integer.parseInt(firstLine[6]);
 
-        this.languages.add(firstLine[7].replace("[", "").replace("]", "").replace("'", ""));
+        // try {
+        // this.languages.add(firstLine[7].replace("[", "").replace("]",
+        // "").replace("'", ""));
 
-        for (int j = 0; j < games.length(); j++) {
-            if (languages.contains("[")) {
-                this.languages.add(firstLine[7].replace("'", ""));
-            } else if (languages.contains("]"))
-                ;
-        }
+        // } catch (Exception euu) {
+
+        // }
+
+        /////////////////////////////////////////////////////////////////////////
+
+        // try {
+        //     for (int j = 0; j < games.length(); j++) {
+        //         if (games.charAt(j) == '[') {
+        //             this.languages.add(firstLine[7]);
+        //         } else if (games.charAt(j) == ']') {
+        //             break;
+        //         }
+
+        //     }
+        // } catch (Exception e) {
+
+        // }
+
         this.website = firstLine[8];
         this.windows = Boolean.parseBoolean(firstLine[9]);
         this.mac = Boolean.parseBoolean(firstLine[10]);
@@ -394,13 +414,14 @@ class classGames {
         this.avg_pt = Integer.parseInt(firstLine[14]);
         this.developers = firstLine[15];
 
-        try {
-            this.genres.add(firstLine[16].replace(",", ", "));
-        } catch (NullPointerException e) {
-            this.genres.add(firstLine[16]);
-        }
+        // try {
+        //     this.genres.add(firstLine[16].replace(",", ", "));
+        // } catch (NullPointerException e) {
+        //     this.genres.add(firstLine[16]);
+        // }
 
     }
+
 }
 
 class pilhaSequencial {
