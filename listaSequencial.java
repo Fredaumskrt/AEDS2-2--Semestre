@@ -14,112 +14,117 @@ Matricula: 747544
 
 /////////////////////////////////////////////////
 */
-
 class Lista {
     private classGames[] array;
     private int n;
-
-    public Lista(int tamanho) {
-        array = new classGames[tamanho];
-        n = 0;
+ 
+ 
+    public Lista (int tamanho){
+       array = new classGames[tamanho];
+       n = 0;
     }
-
+  
     public void inserirInicio(classGames x) throws Exception {
-
-        // validar insercao
-        if (n >= array.length) {
-            throw new Exception("Erro ao inserir!");
-        }
-
-        // levar elementos para o fim do array
-        for (int i = n; i > 0; i--) {
-            array[i] = array[i - 1];
-        }
-
-        array[0] = x;
-        n++;
+ 
+       //validar insercao
+       if(n >= array.length){
+          throw new Exception("Erro ao inserir!");
+       } 
+ 
+       //levar elementos para o fim do array
+       for(int i = n; i > 0; i--){
+          array[i] = array[i-1];
+       }
+ 
+       array[0] = x;
+       n++;
     }
-
+ 
     public void inserirFim(classGames x) throws Exception {
-
-        if (n >= array.length) {
-            throw new Exception("Erro ao inserir!");
-        }
-        array[n] = x.clone();
-        n++;
+ 
+       //validar insercao
+       if(n >= array.length){
+          throw new Exception("Erro ao inserir!");
+       }
+ 
+       array[n] = x;
+       n++;
     }
 
     public void inserir(classGames x, int pos) throws Exception {
-
-        // validar insercao
-        if (n >= array.length || pos < 0 || pos > n) {
-            throw new Exception("Erro ao inserir!");
-        }
-
-        // levar elementos para o fim do array
-        for (int i = n; i > pos; i--) {
-            array[i] = array[i - 1];
-        }
-
-        array[pos] = x;
-        n++;
-    }
-
-    public classGames remover(int pos) throws Exception {
-
-        // validar remocao
-        if (n == 0 || pos < 0 || pos >= n) {
-            throw new Exception("Erro ao remover!");
-        }
-
-        classGames resp = array[pos];
-        n--;
-
-        for (int i = pos; i < n; i++) {
-            array[i] = array[i + 1];
-        }
-
-        return resp;
-    }
-
-    public classGames removerFim() throws Exception {
-
-        if (n == 0) {
-            throw new Exception("Erro ao remover!");
-        }
-
-        return array[--n];
-    }
-
-    public void mostrar() {
-        for (int i = 0; i < n; i++) {
-            if (array[i] == null)
-                continue;
-            System.out.print("[" + i + "]" + " ");
-            array[i].print();
-        }
+ 
+       //validar insercao
+       if(n >= array.length || pos < 0 || pos > n){
+          throw new Exception("Erro ao inserir!");
+       }
+ 
+       //levar elementos para o fim do array
+       for(int i = n; i > pos; i--){
+          array[i] = array[i-1];
+       }
+ 
+       array[pos] = x;
+       n++;
     }
 
     public classGames removerInicio() throws Exception {
-
-        // validar remocao
-        if (n == 0) {
-            throw new Exception("Erro ao remover!");
-        }
-
-        classGames resp = array[0];
-        n--;
-
-        for (int i = 0; i < n; i++) {
-            array[i] = array[i + 1];
-        }
-
-        return resp;
+ 
+       //validar remocao
+       if (n == 0) {
+          throw new Exception("Erro ao remover!");
+       }
+ 
+       classGames resp = array[0];
+       n--;
+ 
+       for(int i = 0; i < n; i++){
+          array[i] = array[i+1];
+       }
+ 
+       return resp;
     }
+ 
+    public classGames removerFim() throws Exception {
+ 
+       //validar remocao
+       if (n == 0) {
+          throw new Exception("Erro ao remover!");
+       }
+ 
+       return array[--n];
+    }
+ 
 
-}
-
+    public classGames remover(int pos) throws Exception {
+ 
+       //validar remocao
+       if (n == 0 || pos < 0 || pos >= n) {
+          throw new Exception("Erro ao remover!");
+       }
+ 
+       classGames resp = array[pos];
+       n--;
+ 
+       for(int i = pos; i < n; i++){
+          array[i] = array[i+1];
+       }
+ 
+       return resp;
+    }
+ 
+ 
+    
+    public void mostrar (){
+       for(int i = 0; i < n; i++){
+        System.out.printf("[%d] ", i);
+          array[i].print();
+       }
+    }
+ 
+ }
 class classGames {
+    public static final String pastaClasseGames = "tmp/games.csv";
+
     private int app_id;
     private String name;
     private Date dateOfYear;
@@ -127,7 +132,7 @@ class classGames {
     private int age;
     private float price;
     private int dlcs;
-    static ArrayList<String> languages;
+    private ArrayList<String> languages;
     private String website;
     private boolean windows;
     private boolean mac;
@@ -188,13 +193,8 @@ class classGames {
         clone.price = this.price;
         clone.dlcs = this.dlcs;
 
-        // clone.languages = this.languages;
-        // clone.languages.addAll(languages);
-
-        // for (String s : this.languages) {
-        // clone.languages.add(s);
-        // }
-        // clone.languages.addAll(this.languages);
+        clone.languages = new ArrayList<String>();
+        clone.languages.addAll(languages);
 
         clone.website = this.website;
         clone.windows = this.windows;
@@ -204,10 +204,8 @@ class classGames {
         clone.avg_pt = this.avg_pt;
         clone.developers = this.developers;
 
-        // clone.genres = new ArrayList<String>();
-        // for (String s : this.genres) {
-        // clone.genres.add(s);
-        // }
+        clone.genres = new ArrayList<String>();
+        clone.genres.addAll(genres);
 
         return clone;
     }
@@ -396,9 +394,11 @@ class classGames {
     }
 
     public void readapp_id(String games) throws Exception {
-        String folderOfGames = "tmp/games.csv";
+        // String folderOfGames = "tmp/games.csv";
+        this.languages.clear();
+        this.genres.clear();
 
-        FileReader arq = new FileReader(folderOfGames);
+        FileReader arq = new FileReader(pastaClasseGames);
         BufferedReader br = new BufferedReader(arq);
 
         String[] firstLine = new String[20];
@@ -444,29 +444,14 @@ class classGames {
         this.price = Float.parseFloat(firstLine[5]);
         this.dlcs = Integer.parseInt(firstLine[6]);
 
-        // try {
-        // this.languages.add(firstLine[7].replace("[", "").replace("]",
-        // "").replace("'", ""));
+        this.languages.add(firstLine[7].replace("[", "").replace("]", "").replace("'", ""));
 
-        // } catch (Exception euu) {
-
-        // }
-
-        /////////////////////////////////////////////////////////////////////////
-
-        // try {
-        // for (int j = 0; j < games.length(); j++) {
-        // if (games.charAt(j) == '[') {
-        // this.languages.add(firstLine[7]);
-        // } else if (games.charAt(j) == ']') {
-        // break;
-        // }
-
-        // }
-        // } catch (Exception e) {
-
-        // }
-
+        for (int j = 0; j < games.length(); j++) {
+            if (languages.contains("[")) {
+                this.languages.add(firstLine[7].replace("'", ""));
+            } else if (languages.contains("]"))
+                ;
+        }
         this.website = firstLine[8];
         this.windows = Boolean.parseBoolean(firstLine[9]);
         this.mac = Boolean.parseBoolean(firstLine[10]);
@@ -477,18 +462,17 @@ class classGames {
         this.avg_pt = Integer.parseInt(firstLine[14]);
         this.developers = firstLine[15];
 
-        // try {
-        // this.genres.add(firstLine[16].replace(",", ", "));
-        // } catch (NullPointerException e) {
-        // this.genres.add(firstLine[16]);
-        // }
+        try {
+            this.genres.add(firstLine[16].replace(",", ", "));
+        } catch (NullPointerException e) {
+            this.genres.add(firstLine[16]);
+        }
 
     }
-
 }
 
 class listaSequencial {
-    public int app_id;
+    
 
     public static void main(String[] args) throws Exception {
         MyIO.setCharset("UTF-8");
@@ -496,23 +480,25 @@ class listaSequencial {
         String[] begin = new String[1000]; // entrada
         int count = 0; // contador
 
+        Lista test = new Lista(100);
         classGames gamesT = new classGames();
-        
+
         while (true) {
             begin[count] = MyIO.readLine();
             if (begin[count].equals("FIM")) {
                 break;
             }
-            String gamesContent = findGameByID("tmp/games.csv", begin[count]);
+            String gamesContent = findGameByID(classGames.pastaClasseGames, begin[count]);
             gamesT.readapp_id(gamesContent); // busca os atributos
-            
-            Lista test = new Lista(100);
-            test.inserir(gamesT.clone());
+            test.inserirFim(gamesT.clone());
             count++;
+
         }
 
         if (count == 0)
             return;
+
+       
 
         int nextEntry;
         nextEntry = MyIO.readInt();
@@ -525,8 +511,8 @@ class listaSequencial {
             int posIR = 0;
 
             if (action.compareTo("I*") == 0) {
-                posIR = Integer.parseInt(begin[count].substring(3, 4));
-                reservation = begin[count].substring(6);
+                posIR = Integer.parseInt(begin[count].substring(4, 5));
+                reservation = begin[count].substring(7);
             }
 
             else if (action.compareTo("R*") == 0) {
@@ -536,7 +522,7 @@ class listaSequencial {
             }
             if (action.compareTo("I*") == 0) {
 
-                String gamesContent = findGameByID("tmp/games.csv", reservation);
+                String gamesContent = findGameByID(classGames.pastaClasseGames, reservation);
                 gamesT.readapp_id(gamesContent);
 
                 test.inserirInicio(gamesT.clone());
@@ -544,18 +530,19 @@ class listaSequencial {
             }
             if (action.compareTo("II") == 0) {
 
-                String gamesContent = findGameByID("tmp/games.csv", reservation);
+                String gamesContent = findGameByID(classGames.pastaClasseGames, reservation);
                 gamesT.readapp_id(gamesContent);
                 test.inserirFim(gamesT);
 
             } else if (action.compareTo("IF") == 0) {
                 classGames testeNovo = new classGames();
 
-                String gamesContent = findGameByID("tmp/games.csv", reservation);
+                String gamesContent = findGameByID(classGames.pastaClasseGames, reservation);
                 gamesT.readapp_id(gamesContent);
-                // test.inserirFim(gamesT);
-
-            } else if (action.compareTo("R*") == 0) {
+                test.inserirFim(gamesT);
+                
+            } if (action.compareTo("R*") == 0) {
+                System.out.println("passei"); // passei
                 MyIO.println("(R)" + " " + test.remover(posIR).getname());
             } else if (action.compareTo("RI") == 0) {
 
