@@ -1,0 +1,22 @@
+Author - Frederico Malaquias A. Caldeira
+Matricula - 747544
+
+Unidade 00m
+Tela Pág82
+
+EM = endereço de Memoria
+
+*p -> passagem de valor
+&  -> passagem de endereço
+
+  Quadro de Memoria 
+
+a | 10    | EM  
+b | 100   | EM     
+
+a = b -> erro
+
+a | 10    | EM     
+b | 100   | EM     
+
+

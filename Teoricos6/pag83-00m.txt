@@ -1,0 +1,24 @@
+Author - Frederico Malaquias A. Caldeira
+Matricula - 747544
+
+Unidade 00m
+Tela Pág83
+
+EM = endereço de Memoria
+
+*p -> passagem de valor
+&  -> passagem de endereço
+
+  Quadro de Memoria 
+
+x3 = x1 * x2 = 400
+x3 = &x2
+
+x2 = 15
+
+x1 |  20  | EM  
+x2 |  20  | EM     
+x3 |  400 | EM     
+     
+
+

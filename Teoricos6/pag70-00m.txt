@@ -1,0 +1,50 @@
+Unidade 00m
+Tela Pág70
+
+EM = endereço de Memoria
+Memoria x1
+
+x1 |  0     | 89Dh
+x2 |  89eC  | 0    
+x3 |  0     | 89Ef
+p  |  0     |  0
+
+
+Memoria *x1 = 20
+
+x1 |  20    | 89Dh
+x2 |  89eC  | 0    
+x3 |  0     | 89Ef
+p  |  0     |  0
+
+
+Memoria x2 = *x1 = 20
+
+x1 |  20    | 89Dh
+x2 |  89eC  | 20    
+x3 |  0     | 89Ef
+p  |  0     |  0
+
+
+Memoria *x3 = x2 * *x1 = 400
+
+x1 |  20    | 89Dh
+x2 |  89eC  | 400    
+x3 |  400   | 89Ef
+p  |  0     |  0
+
+Memoria x3 = &x2
+
+x1 |  20    | 89Dh
+x2 |  89eC  | 88Ec    
+x3 |  88Ec  | 89Ef
+p  |  0     |  0
+
+
+Memoria x2 = 15
+
+x1 |  20    | 89Dh
+x2 |  89eC  | 88Ec    
+x3 |  400   | 89Ef
+p  |  0     |  0
+

@@ -1,0 +1,19 @@
+Author - Frederico Malaquias A. Caldeira
+Matricula - 747544
+Unidade 00m
+Tela Pág79
+
+EM = endereço de Memoria
+Memoria M  
+
+            Funcionarios
+
+       1 |  AA  | 0
+       
+       codigo = 2
+       Nome   = BB 
+
+       Funcionarios
+        2 |  BB  | 
+
+
