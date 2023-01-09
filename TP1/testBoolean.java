@@ -14,7 +14,7 @@ class booleana {
         
         
         if (n == 0) {
-            break;
+            // break;
         }
 
         int array[] = new int[n];

@@ -1,4 +1,6 @@
-class booleana{
+import java.util.Scanner;
+
+class algebraRecursiva{
 
     public static int primeiro(String s){
 
@@ -24,7 +26,7 @@ class booleana{
         int and = s.lastIndexOf("and");
         int or = s.lastIndexOf("or");
         
-        if(not > and && not > or){
+        if(not > and && not > or){//quem é maior
 
             return not;
         }else if(and > not && and > or){
@@ -42,14 +44,14 @@ class booleana{
         
        while(true){
 
-        int n = MyIO.readInt();//quantidade de letras
+        int n = MyIO.readInt();
 
         if(n == 0){
 
             break;
         }
 
-        int[] a = new int[n];
+        int[] a = new int[n]; 
 
         for(int i=0; i < n; i++){
 
@@ -63,7 +65,7 @@ class booleana{
             entrada = entrada.substring(0, entrada.length() - 1);
         }
 
-
+        
 
         for(int i=0; i < n; i++){
 
@@ -82,7 +84,7 @@ class booleana{
             }
         }
 
-        
+       
 
         while(entrada.length() > 1){
 
