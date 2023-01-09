@@ -764,30 +764,7 @@ Game game_search(int app_id) {
     game.app_id = -1;
     return game;
 }
-void insercaoPorCor(Game *array, int n, int cor, int h){
-    for (int i = (h + cor); i < n; i+=h) {
-        Game tmp = array[i];
-        int j = i - h;
-        while ((j >= 0) && (strcmp(array[j].app_id, tmp.app_id) > 0)) {
-            array[j + h] = array[j];
-            j-=h;
-        }
-        array[j + h] = tmp;
-    }
-}
 
-void shellsort(Game *array, int n) {
-    int h = 1;
-
-    do { h = (h * 3) + 1; } while (h < n);
-
-    do {
-        h /= 3;
-        for(int cor = 0; cor < h; cor++){
-            insercaoPorCor(array, n, cor, h);
-        }
-    } while (h != 1);
-}
 
 // ---------------------------------------------------------------------------------------------------------- //
 
@@ -844,7 +821,7 @@ int main() {
 
         scanf(" %[^\n]", line_in);
     }
-    shellsort(games, 0);
+    selectionSort(games, 0, n);
 
 
     // ---------------------------------------------------------------------------------------- //
